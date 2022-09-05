@@ -27,16 +27,14 @@ const auth = getAuth();
 // getting data collection
 const colRef = collection(db, "guides");
 
-getDocs(colRef).then((snapshot) => {
-  setupGuides(snapshot.docs);
-});
-
 // listen for auth state change
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log("user logged in:", user);
+    getDocs(colRef).then((snapshot) => {
+      setupGuides(snapshot.docs);
+    });
   } else {
-    console.log("user logged out");
+    setupGuides([]);
   }
 });
 
