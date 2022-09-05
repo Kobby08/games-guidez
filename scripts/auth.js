@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
+import { setupGuides } from ".";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -20,8 +21,15 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore();
+export const db = getFirestore();
 const auth = getAuth();
+
+// getting data collection
+const colRef = collection(db, "guides");
+
+getDocs(colRef).then((snapshot) => {
+  setupGuides(snapshot.docs);
+});
 
 // listen for auth state change
 onAuthStateChanged(auth, (user) => {
